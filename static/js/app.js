@@ -4,10 +4,42 @@ console.log("This is app.js");
 function bargraph(subject)
 {
     console.log("Bar graph for:", subject);
+    
+    d3.json("samples.json").then
+    ( (data) =>
+    {   // Define data pertaining to subject
+        var subjsmpl = data.samples.filter(s => s.id == subject)[0];
+        // Ensure sample populates correctly for subject
+        console.log(subjsmpl);
+        // Grab remaining results -- do we need to sort here?
+        var otuIDs = subjsmpl.otu_ids;
+        var otunames = subjsmpl.otu_labels;
+        var measures = subjsmpl.sample_values;
+        // Construct plot
+        var barYticks = otuIDs.slice(0, 10).map(i => `OTU ${i} `).reverse();
+        // Ensure ticks populate correctly
+        console.log(barYticks);
+        var barData = {
+            x: measures.slice(0,10).reverse(),
+            y: barYticks,
+            type: "bar",
+            text: otunames.slice(0,10).reverse(),
+            orientation: "h",
+            marker: {color: "tan"}
+        }
+        var barLayout = {
+            title: "Top 10 Microbial Species Present",
+            margin: {t: 30},
+            // margin: {t: 30, 1: 150},
+        };
+
+        Plotly.newPlot("bar", [barData], barLayout)
+    }
+    );
 } 
 
 // **Placehlolder for bubble plot
-function bubbplot(subject)
+function bubbplot(subject) 
 {
     console.log("Bubble plot for:", subject)
 }
@@ -25,7 +57,7 @@ function gaugecht(subject)
 }
 
 // Refresh when changing option from dropdown
-function dropchg(newSubject)
+function dropchng(newSubject)
 {
     console.log("Subject selected:", newSubject);
     bargraph(newSubject);
