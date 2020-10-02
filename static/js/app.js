@@ -1,4 +1,5 @@
-console.log("This is app.js");
+// Some code from bargraph, infocard, dropchng, pageload functions
+// from office hours discussions with Dom
 
 // **Placeholder for bar graph
 function bargraph(subject)
@@ -19,20 +20,24 @@ function bargraph(subject)
         var barYticks = otuIDs.slice(0, 10).map(i => `OTU ${i} `).reverse();
         // Ensure ticks populate correctly
         console.log(barYticks);
+        // Construct graph
         var barData = {
             x: measures.slice(0,10).reverse(),
             y: barYticks,
             type: "bar",
             text: otunames.slice(0,10).reverse(),
             orientation: "h",
-            marker: {color: "tan"}
-        }
+            marker: {color: otuIDs.slice(0,10).reverse()}
+            // marker: {color: "tan"}
+        };
+        // Provide layout
         var barLayout = {
             title: "Top 10 Microbial Species Present",
+            xaxis: {title: "SAMPLE VALUES"},
             margin: {t: 30},
             // margin: {t: 30, 1: 150},
         };
-
+        // Plot
         Plotly.newPlot("bar", [barData], barLayout)
     }
     );
@@ -42,12 +47,60 @@ function bargraph(subject)
 function bubbplot(subject) 
 {
     console.log("Bubble plot for:", subject)
+    d3.json("samples.json").then
+    ( (data) =>
+    {
+        var subjsmpl = data.samples.filter(s => s.id == subject)[0];
+        var otuIDs = subjsmpl.otu_ids;
+        var otunames = subjsmpl.otu_labels;
+        var measures = subjsmpl.sample_values;
+
+        var bubData = {
+            x: otuIDs,
+            y: measures,
+            marker: {size: measures, color: otuIDs},
+            text: otunames,
+            mode: "markers"
+        };
+
+        var bubLayout = {
+            title: "Microbial Cultures in Sample",
+            xaxis: {title: "OTU ID"},
+            yaxis: {title: "SAMPLE VALUES"}
+        };
+
+        Plotly.newPlot("bubble", [bubData], bubLayout);
+    }
+    );
+
 }
 
 // **Placeholder for info box
 function infocard(subject)
 {
     console.log("Info card for:", subject)
+    
+    d3.json("samples.json").then
+    ( (data) =>
+    {
+        // Define metadata pertaining to subject
+        var subjmeta = data.metadata.filter(md => md.id == subject)[0];
+        console.log(subjmeta);
+
+        var card = d3.select("#sample-metadata");
+        card.html("");
+
+        Object.entries(subjmeta).forEach
+        (([key, value]) =>
+        {
+            var lineID = `${key}: ${value}`;
+            card.append("h6").text(lineID);
+            // card.append("h6").text(key);
+            // card.append("h6").text(value);
+        }        
+        );
+    }
+    );
 }
 
 // **Placeholder for gauge
