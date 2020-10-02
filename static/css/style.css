@@ -1,0 +1,9 @@
+.brown {
+    border-color:rgb(141, 41, 23);
+    background-color: rgb(252, 232, 209);
+}
+
+.panel-heading {
+    border: none;
+    background-color: rgb(141, 41, 23); 
+}
