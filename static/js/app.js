@@ -2,8 +2,7 @@
 // from office hours discussions with Dom
 
 // **Placeholder for bar graph
-function bargraph(subject)
-{
+function bargraph(subject) {
     console.log("Bar graph for:", subject);
     
     d3.json("samples.json").then
@@ -39,13 +38,11 @@ function bargraph(subject)
         };
         // Plot
         Plotly.newPlot("bar", [barData], barLayout)
-    }
-    );
+    });
 } 
 
 // **Placehlolder for bubble plot
-function bubbplot(subject) 
-{
+function bubbplot(subject) {
     console.log("Bubble plot for:", subject)
     d3.json("samples.json").then
     ( (data) =>
@@ -62,17 +59,13 @@ function bubbplot(subject)
             text: otunames,
             mode: "markers"
         };
-
         var bubLayout = {
             title: "Microbial Cultures in Sample",
             xaxis: {title: "OTU ID"},
             yaxis: {title: "SAMPLE VALUES"}
         };
-
         Plotly.newPlot("bubble", [bubData], bubLayout);
-    }
-    );
-
+    });
 }
 
 // **Placeholder for info box
@@ -91,27 +84,59 @@ function infocard(subject)
         card.html("");
 
         Object.entries(subjmeta).forEach
-        (([key, value]) =>
+        ( ([key, value]) =>
         {
             var lineID = `${key}: ${value}`;
             card.append("h6").text(lineID);
             // card.append("h6").text(key);
             // card.append("h6").text(value);
-        }        
-        );
-    }
-    );
+        });
+    });
 }
 
 // **Placeholder for gauge
 function gaugecht(subject)
 {
     console.log("Gauge for:", subject)
+    d3.json("samples.json").then
+    ( (data) =>
+    {
+        var washfreq = data.metadata.filter(md => md.id == subject)[0].wfreq;
+        console.log("Wash Frequency for", subject, "is:", washfreq);
+
+        var allwashes = data.metadata.map(md => md.wfreq);
+        var maxwash = d3.max(allwashes)
+        console.log(maxwash)
+
+        var ggeData = {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: washfreq,
+                type: "indicator",
+                mode: "gauge+number",
+                gauge: {
+                    axis: { range: [null, maxwash], dtick: 1 },
+                    bar: { color: "rgb(141,41,23)"},
+                    bgcolor: "rgb(252, 232, 209)",
+                    steps: [
+                        { range: [0, maxwash/3], color:"rgb(255, 192, 192)"},
+                        { range: [maxwash/3, maxwash*2/3], color:"rgb(255, 224, 192)"},
+                        { range: [maxwash*2/3, maxwash], color:"rgb(240, 232, 224)"},
+                    ]
+                }
+        }
+        var gagLayout = {
+            title: "Weekly Wash Frequency",
+            height: 350,
+            margin: { t: 30 }
+        };
+        Plotly.newPlot("gauge", [ggeData], gagLayout);
+    });
 }
 
+
+
 // Refresh when changing option from dropdown
-function dropchng(newSubject)
-{
+function dropchng(newSubject) {
     console.log("Subject selected:", newSubject);
     bargraph(newSubject);
     bubbplot(newSubject);
@@ -119,8 +144,7 @@ function dropchng(newSubject)
     gaugecht(newSubject);
 }
 
-function pageload()
-{
+function pageload() {
     // Grab the selector
     var selector = d3.select("#selDataset");
     // Use the info from the json to load the page
@@ -134,13 +158,12 @@ function pageload()
         console.log(subjects);
         // Load the subject list into the selector
         subjects.forEach
-        ((subject) =>
+        ( (subject) =>
         {
             selector.append("option")
             .text(subject)
             .property("value");
-        }
-        );
+        });
         // Initial sample information
         var firstSubject = subjects[0];
         console.log("Starting sample:", firstSubject);
@@ -149,8 +172,7 @@ function pageload()
         bubbplot(firstSubject);
         infocard(firstSubject);
         gaugecht(firstSubject);
-    }
-    );
+    });
 }
 
 pageload();
