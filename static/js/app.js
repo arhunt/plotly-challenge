@@ -31,7 +31,9 @@ function bargraph(subject) {
         var barLayout = {
             title: "Top 10 Microbial Species Present",
             xaxis: {title: "SAMPLE VALUES"},
-            margin: {t: 30},
+            margin: {t: 30, r: 30},
+            paper_bgcolor: "rgb(255, 242, 227)",
+            plot_bgcolor: "rgb(255, 242, 227)"
         };
         // Plot
         Plotly.newPlot("bar", [barData], barLayout)
@@ -64,7 +66,9 @@ function bubbplot(subject) {
         var bubLayout = {
             title: "Microbial Cultures in Sample",
             xaxis: {title: "OTU ID"},
-            yaxis: {title: "SAMPLE VALUES"}
+            yaxis: {title: "SAMPLE VALUES"},
+            paper_bgcolor: "rgb(255, 242, 227)",
+            plot_bgcolor: "rgb(255, 242, 227)"
         };
         Plotly.newPlot("bubble", [bubData], bubLayout);
     });
@@ -82,18 +86,14 @@ function infocard(subject)
         var subjmeta = data.metadata.filter(md => md.id == subject)[0];
             // Test retrieval
             // console.log(subjmeta);
-
+        
+        // Select the area for demographic info to populate
         var card = d3.select("#sample-metadata");
         card.html("");
-
+        // populate info foreach entry in metadata
         Object.entries(subjmeta).forEach
-        ( ([key, value]) =>
-        {
-            var lineID = `${key}: ${value}`;
-            card.append("h6").text(lineID);
-            // card.append("h6").text(key);
-            // card.append("h6").text(value);
-        });
+        ( ([key, value]) => {
+        card.append("h6").html(`<b>${key.toUpperCase()}</b><p>${value}`); });
     });
 }
 
@@ -124,7 +124,7 @@ function gaugecht(subject)
                 gauge: {
                     axis: { range: [null, maxwash], dtick: 1 },
                     bar: { color: "rgb(180,64,64)" , thickness: 0.4},
-                    bgcolor: "rgb(252, 232, 209)",
+                    bgcolor: "rgb(255, 242, 227)",
                     steps: [
                         { range: [0, maxwash/3],
                             color:"rgb(255, 192, 192)",
@@ -142,7 +142,10 @@ function gaugecht(subject)
         var gagLayout = {
             title: "Weekly Wash Frequency",
             height: 350,
-            margin: { t: 30 }
+            // margin: { t: 25, r: 25, l: 25, b: 25 },
+            margin: { t: 30, l:30, r:30},
+            paper_bgcolor: "rgb(255, 242, 227)"
+            
         };
         Plotly.newPlot("gauge", [gagData], gagLayout);
     });
