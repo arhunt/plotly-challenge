@@ -68,7 +68,8 @@ function bubbplot(subject) {
             xaxis: {title: "OTU ID"},
             yaxis: {title: "SAMPLE VALUES"},
             paper_bgcolor: "rgb(255, 242, 227)",
-            plot_bgcolor: "rgb(255, 242, 227)"
+            plot_bgcolor: "rgb(255, 242, 227)",
+            hovermode: "closest"
         };
         Plotly.newPlot("bubble", [bubData], bubLayout);
     });
