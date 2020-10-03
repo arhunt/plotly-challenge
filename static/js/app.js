@@ -93,7 +93,7 @@ function infocard(subject)
         // populate info foreach entry in metadata
         Object.entries(subjmeta).forEach
         ( ([key, value]) => {
-        card.append("h6").html(`<b>${key.toUpperCase()}</b><p>${value}`); });
+        card.append("h6").html(`<strong>${key.toUpperCase()}</strong><p>${value}`); });
     });
 }
 
